@@ -455,6 +455,273 @@ EDFval(salmon)
 
 
 #################################################################################################################
+### This code gets AIC values for the parametric tests
+#####
+
+nls_cont <- nls.control(maxiter = 500, tol = 1e-05, minFactor = 1/(1024*20),
+                        printEval = FALSE, warnOnly = FALSE)
+datlist <- c(anchovy,sardine,squid,rockfish,seabirds,sealions,salmon,so.cal,cen.cal,global)
+#################################
+#### Anchovy
+
+i <- anchovy
+i <- i[complete.cases(i),]
+pred <- i$prd
+prey <- i$pry
+
+model1 <- nls(pred~b, start=list(b=1),control=nls_cont)
+model2 <- nls(pred~(a*prey)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(pred~a*(exp(-b*prey)), start=list(a=1, b=1),control=nls_cont)
+
+
+model4 <- nls(pred~c+a*(1-exp(-b*prey)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(pred~c+a*(1-(b^prey)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+
+
+model6 <- nls(pred~(a*prey)/(b+prey), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(pred~c+((a*prey)/(b+prey)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(pred~(a*prey)/(b+prey)+c*prey, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(pred~(a*prey)/(1+(b*prey)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(pred~prey/(a+(b*prey)), start=list(a=1, b=1),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Anchovy.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+#################################################################################
+#### sardine
+
+i <- sardine
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=0, c=0.001),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Sardine.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+#################################################################################
+#### squid
+
+i <- squid
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Squid.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+#################################################################################
+#### rockfish
+
+i <- rockfish
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Rockfish.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+
+#################################################################################
+#### seabirds
+
+i <- seabirds
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Seabirds.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+#################################################################################
+#### sealions
+
+i <- sealions
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Sealions.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+
+#################################################################################
+#### salmon
+
+i <- salmon
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Salmon.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+#################################################################################
+#### southern california
+
+i <- so.cal
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+SoCal.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+
+#################################################################################
+#### central california
+
+i <- cen.cal
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+CenCal.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+
+#################################################################################
+#### global
+
+i <- global
+i <- i[complete.cases(i),]
+prd <- i$prd
+pry <- i$pry
+
+model1 <- nls(prd~b, start=list(b=1),control=nls_cont)
+model2 <- nls(prd~(a*pry)+b, start=list(a=1, b=1),control=nls_cont)
+model3 <- nls(prd~a*(exp(-b*pry)), start=list(a=1, b=1),control=nls_cont)
+model4 <- nls(prd~c+a*(1-exp(-b*pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model5 <- nls(prd~c+a*(1-(b^pry)), start=list(a=1, b=0.001, c=0.001),control=nls_cont)
+model6 <- nls(prd~(a*pry)/(b+pry), start=list(a=1, b=1),control=nls_cont)
+model7 <- nls(prd~c+((a*pry)/(b+pry)), start=list(a=1, b=1, c=0),control=nls_cont)
+model8 <- nls(prd~(a*pry)/(b+pry)+c*pry, start=list(a=1, b=1, c=0),control=nls_cont)
+model9 <- nls(prd~(a*pry)/(1+(b*pry)), start=list(a=1, b=1),control=nls_cont)
+model10 <- nls(prd~pry/(a+(b*pry)), start=list(a=1, b=0.001),control=nls_cont)
+
+
+modlist <- list(model1,model2,model3,model4,model5,model6,model7,model8,model9,model10)
+Global.outs <- foreach(i=modlist,.combine='rbind') %do%{
+  return(AIC(i))
+}
+
+
+############################################################################
+
+AICFINAL <- data.frame(Anchovy.outs,Sardine.outs,Squid.outs,Rockfish.outs,Seabirds.outs,Sealions.outs,Salmon.outs,SoCal.outs,CenCal.outs,Global.outs)
+
+
+
+
+
+
 
 
 
