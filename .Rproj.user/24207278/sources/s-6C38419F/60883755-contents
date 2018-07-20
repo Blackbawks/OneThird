@@ -1,0 +1,5 @@
+library(plot3D)
+
+data(iris)
+plot3d(iris$Sepal.Length,iris$Sepal.Width,iris$Petal.Length,pch=20,size=2,type='s', clab=c("Width (cm)"),theta=15,phi=20,bty='g',
+          col=gg.col(100))

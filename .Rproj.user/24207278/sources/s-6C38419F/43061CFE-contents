@@ -1,0 +1,82 @@
+#Bootstrapping code
+####### PURPOSE: Script to bootstrap on the data set to find the confidence interval for the threshold
+#estimate (for Fig 2A)
+####### INSTRUCTIONS: set the bootstrap sample size you want to do in the Fig2A_B.R script
+####### INSTRUCTIONS: set the path where you downloaded and saved the global dataset
+####### REQUIREMENTS: you need the script bootstrapping.R and to have the R packages 'gam',
+#'changepoint', and 'time' installed
+####### INPUTS: the global_dataset.csv file
+####### OUTPUTS: Figs. 2A
+#############################################################
+### The global data set contains some holes in the times series. We first select the years we have both a
+#breeding success and an abundance estimate for the prey
+data <- t_glob
+bird <- as.numeric(data[,2])  
+prey <- as.numeric(data[,3])
+req1 <- which(is.na(bird)==T)
+if (length(req1) >0) {bird<-bird[-req1];prey<-prey[-req1] }
+req2<-which(is.na(prey)==T)
+if (length(req2) >0) {bird<-bird[-req2];prey<-prey[-req2] }
+####### RESAMPLING #########
+nb <- bootstrap_size
+thresh <- vector(length=nb) ## create a vector to be filled with the estimated threshold
+prev <- txtProgressBar(min=0,max=nb,style=3) ## just to display how long it remains for the bootstrap
+for (i in 1:nb) {
+  setTxtProgressBar(prev,i)
+  bootsample <- sample(1:length(bird), replace=T)
+  birdi <- bird[bootsample]
+  preyi <- prey[bootsample]
+  #######Computing threshold on new sample #######
+  gam.object <- gam(birdi~s(preyi, smoother_size), na.action='na.omit')
+  prediction <- predict.gam(gam.object, se.fit=T)
+  fds <- cbind(prediction$fit,preyi,prediction$se.fit,0,0)
+  fds2 <- order(fds[,2])
+  titu <- spline(prediction$fit[fds2]~preyi[fds2],n=200)
+
+  data <- cbind(titu$y[1:150],1,titu$x[1:150])
+
+  change_point <- cpt.mean(data[,1],penalty="SIC") ## Calculate the position of the threshold (see changepoint package)  ##cpt.reg
+  cpts(change_point)
+  #data[cpts(change_point),1]
+  
+  try(thresh[i] <- titu$x[cpts(change_point)[1]])
+}
+close(prev)
+### Reset the values to initial values
+data <- t_glob
+bird<-as.numeric(data[,2])
+prey<-as.numeric(data[,3])
+req1<-which(is.na(bird)==T)
+if (length(req1) >0){bird<-bird[-req1];prey<-prey[-req1] }
+req2<-which(is.na(prey)==T)
+if (length(req2) >0){bird<-bird[-req2];prey<-prey[-req2] }
+gam.object<-gam(bird~s(prey,smoother_size), na.action='na.omit')
+prediction<-predict.gam(gam.object, se.fit=T)
+fds<-cbind(prediction$fit,prey,prediction$se.fit,0,0)
+fds2<-order(fds[,2])
+titu <- spline(prediction$fit[fds2]~prey[fds2],n=200)
+
+MaxPrey<-max(data[,3],na.rm=T)
+
+MinPrey<-min(data[,3],na.rm=T)
+Quant<-quantile(thresh, c(0.025, 0.975),na.rm=T)
+PercMax<-round((max(Quant) + abs(MinPrey) )/(MaxPrey+abs(MinPrey)),2)*100
+PercMin<-round((min(Quant) + abs(MinPrey) )/(MaxPrey+abs(MinPrey)),2)*100
+
+
+print(paste("max value of threshold CV is ",as.character(max(Quant)),sep=""))
+print(paste("max value is ",PercMax,"% of max prey biomass (",as.character(MaxPrey),")",sep=""))
+print(paste("min value of threshold CV is ",as.character(min(Quant)),sep=""))
+print(paste("min value is ",PercMin,"% of max prey biomass (",as.character(MaxPrey),")",sep=""))
+
+
+
+
+X <- runif(1,100, n=3)
+
+
+Y <- runif(2,100,n=3)
+
+
+plot()
+
